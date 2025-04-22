@@ -10,13 +10,13 @@ services:
       - key: SECRET_KEY
         value: Qwer!357
       - key: DB_HOST
-        value: localhost
+        value: dpg-d03kvk2li9vc73fp8en0-a
       - key: DB_USER
-        value: zidio_user
+        value: zidio_ai_user
       - key: DB_PASS
-        value: LaKs$5%4
+        value: rC658zZu0jcPVamhba1GmTFPcOBYIaRK
       - key: DB_NAME
-        value: zidio_ai_db
+        value: zidio_ai
       - key: TF_ENABLE_ONEDNN_OPTS
         value: "0"
       - key: PORT

@@ -1,17 +1,19 @@
 # SQLAlchemy setup
 import os
 from dotenv import load_dotenv
-import mysql.connector
+import psycopg2
 
 load_dotenv()
 
 def get_db():
-    return mysql.connector.connect(
-        host=os.getenv("DB_HOST"),
+    conn = psycopg2.connect(
+        dbname=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASS"),
-        database=os.getenv("DB_NAME")
+        host=os.getenv("DB_HOST"),
+        port=os.getenv("DB_PORT", 5432)  # default PostgreSQL port
     )
+    return conn
 
 def save_notification(user_id, message):
     db = get_db()
