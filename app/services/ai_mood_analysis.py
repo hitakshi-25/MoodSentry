@@ -1,14 +1,17 @@
 from transformers import pipeline
-import spacy
+import re
 
-# Load sentiment model and NLP processor
+# Load sentiment model
 nlp_pipe = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english", framework="pt")
-spacy_nlp = spacy.load("en_core_web_sm")
+
+def clean_text(text: str):
+    # Basic text cleaning (remove special characters, normalize whitespace)
+    text = re.sub(r"[^a-zA-Z\s]", "", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
 
 def analyze_text_mood(text: str):
-    # Clean with SpaCy
-    doc = spacy_nlp(text)
-    cleaned_text = " ".join([token.lemma_ for token in doc if not token.is_stop])
+    cleaned_text = clean_text(text)
 
     # Run BERT sentiment analysis
     result = nlp_pipe(cleaned_text)[0]

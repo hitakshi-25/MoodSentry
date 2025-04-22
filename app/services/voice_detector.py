@@ -1,21 +1,19 @@
-import whisper
-import tempfile
+import speech_recognition as sr
 from app.services.ai_mood_analysis import analyze_text_mood
 
-# Load Whisper model once
-model = whisper.load_model("base")
-
 def detect_mood_from_audio(file):
-    # Save audio to a temp file
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
-        tmp.write(file.file.read())
-        tmp_path = tmp.name
+    recognizer = sr.Recognizer()
 
-    # Transcribe using Whisper
-    result = model.transcribe(tmp_path)
-    transcript = result.get("text", "")
+    with sr.AudioFile(file.file) as source:
+        audio = recognizer.record(source)
 
-    # Analyze transcript for emotion
+    try:
+        transcript = recognizer.recognize_google(audio)
+    except sr.UnknownValueError:
+        transcript = ""
+    except sr.RequestError:
+        transcript = ""
+
     mood_result = analyze_text_mood(transcript)
 
     return {
