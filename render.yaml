@@ -1,11 +1,21 @@
-# render.yaml
 services:
   - type: web
-    name: zidio-ai-app
+    name: zidio-ai
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn main:app --host 0.0.0.0 --port 10000"
+    startCommand: "python main.py"
     plan: free
+    branch: main
     envVars:
       - key: SECRET_KEY
-        value: "yoursecretkeyhere"
+        value: Qwer!357
+      - key: DB_HOST
+        value: localhost
+      - key: DB_USER
+        value: zidio_user
+      - key: DB_PASS
+        value: LaKs$5%4
+      - key: DB_NAME
+        value: zidio_ai_db
+      - key: TF_ENABLE_ONEDNN_OPTS
+        value: "0"

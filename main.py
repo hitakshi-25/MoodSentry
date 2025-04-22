@@ -5,7 +5,10 @@ import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from app.routes import audit, auth, mood, dashboard, role_routes, tasks
-import uvicorn
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000)
 
 load_dotenv()
 app = FastAPI()
