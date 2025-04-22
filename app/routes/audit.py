@@ -3,6 +3,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from app.routes.auth import get_current_user
 from app.database import get_db
+import psycopg2.extras
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -13,7 +14,7 @@ def audit_logs(request: Request, user: dict = Depends(get_current_user)):
         return RedirectResponse("/login")
 
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
     cursor.execute("""
         SELECT users.name, moods.mood_source, moods.detected_emotion, moods.created_at

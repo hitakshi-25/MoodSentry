@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.status import HTTP_303_SEE_OTHER
 from app.services.auth_service import create_user, validate_user
 from app.database import get_db
+import psycopg2.extras
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -23,7 +24,7 @@ async def index(request: Request):
 @router.get("/register", response_class=HTMLResponse)
 async def register_get(request: Request):
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cursor.execute("SELECT id, name FROM users WHERE role = 'hr'")
     hr_list = cursor.fetchall()
     cursor.close()

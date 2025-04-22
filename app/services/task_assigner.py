@@ -1,5 +1,6 @@
 import random
 from app.database import get_db
+import psycopg2.extras
 
 AI_ASSIGNED_BY_ID = 1
 
@@ -19,7 +20,7 @@ MOOD_TASK_MAP = {
 
 def assign_task_based_on_mood(user_id, emotion):
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
     task_data = MOOD_TASK_MAP.get(emotion.lower(), (
         "Complete a standard task", "Maintain your workflow with regular task.", "Medium"

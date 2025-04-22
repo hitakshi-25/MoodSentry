@@ -5,6 +5,7 @@ from fastapi.templating import Jinja2Templates
 from app.database import get_db
 from app.routes.auth import get_current_user
 from app.services.notification import notify_hr_of_stress
+import psycopg2.extras
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -16,7 +17,7 @@ async def hr_dashboard(request: Request):
         return RedirectResponse("/login")
 
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
     # 💡 Only fetch employees where this HR is their hr_id
     cursor.execute("""
@@ -66,7 +67,7 @@ async def hr_dashboard(request: Request):
 @router.get("/weekly-moods", response_class=HTMLResponse)
 async def weekly_mood_stats(request: Request, user: dict = Depends(get_current_user)):
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
     role = user.get("role")
     user_id = user.get("id")
@@ -135,7 +136,7 @@ def hr_dashboard(request: Request, user: dict = Depends(get_current_user)):
 @router.get("/dashboard/owner", response_class=HTMLResponse)
 def owner_dashboard(request: Request, user: dict = Depends(get_current_user)):
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cursor.execute("SELECT * FROM users")
     users = cursor.fetchall()
     return templates.TemplateResponse("dashboard/owner.html", {"request": request, "user": user, "users": users})
@@ -146,7 +147,7 @@ def hr_filter_moods(request: Request, user: dict = Depends(get_current_user)):
         return RedirectResponse("/login")
 
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
     cursor.execute("""
         SELECT u.name, m.detected_emotion, m.created_at

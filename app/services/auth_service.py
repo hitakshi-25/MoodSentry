@@ -1,6 +1,7 @@
 import bcrypt
 from app.database import get_db
-from mysql.connector.errors import IntegrityError
+from psycopg2.errors import UniqueViolation
+import psycopg2.extras
 
 def create_user(name: str, email: str, password: str, role: str, hr_id: int = None):
     db = get_db()
@@ -18,7 +19,7 @@ def create_user(name: str, email: str, password: str, role: str, hr_id: int = No
                 (name, email, hashed, role)
             )
         db.commit()
-    except IntegrityError:
+    except UniqueViolation:
         db.rollback()
         raise ValueError("Email already registered.")
     finally:
@@ -28,7 +29,7 @@ def create_user(name: str, email: str, password: str, role: str, hr_id: int = No
 
 def validate_user(email: str, password: str):
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
     user = cursor.fetchone()
     cursor.close()
