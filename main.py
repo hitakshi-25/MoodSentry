@@ -5,16 +5,16 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from app.routes import audit, auth, mood, dashboard, role_routes, tasks
 import os
-
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.environ.get("PORT", 8000))  # fallback to 8000 locally
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
-
+import uvicorn
 
 load_dotenv()
 app = FastAPI()
 
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # Use PORT from env or default to 8000
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
+    
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 # Middleware for sessions
 app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY"))
