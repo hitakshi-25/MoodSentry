@@ -96,7 +96,7 @@ async def weekly_mood_stats(request: Request, user: dict = Depends(get_current_u
         cursor.execute("""
             SELECT mood, COUNT(*) as count
             FROM mood_history
-            WHERE timestamp >= NOW() - INTERVAL 7 DAY
+            WHERE timestamp >= NOW() - INTERVAL '7 days'
             GROUP BY mood
         """)
 
