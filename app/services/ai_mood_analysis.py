@@ -1,27 +1,21 @@
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
-import torch
-import torch.nn.functional as F
+from transformers import pipeline
+import spacy
 
-# Load tokenizer and model directly
-model_name = "distilbert-base-uncased-finetuned-sst-2-english"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForSequenceClassification.from_pretrained(model_name)
+# Load sentiment model and NLP processor
+nlp_pipe = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english", framework="pt")
+spacy_nlp = spacy.load("en_core_web_sm")
 
 def analyze_text_mood(text: str):
-    # Tokenize input
-    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
+    # Clean with SpaCy
+    doc = spacy_nlp(text)
+    cleaned_text = " ".join([token.lemma_ for token in doc if not token.is_stop])
 
-    # Predict logits
-    with torch.no_grad():
-        outputs = model(**inputs)
-        probs = F.softmax(outputs.logits, dim=1)
+    # Run BERT sentiment analysis
+    result = nlp_pipe(cleaned_text)[0]
+    label = result["label"]
+    score = result["score"]
 
-    # Get label and score
-    label_id = torch.argmax(probs, dim=1).item()
-    score = probs[0][label_id].item()
-    label = model.config.id2label[label_id]
-
-    # Map to emotion
+    # Map BERT label to emotion
     if label == "POSITIVE":
         emotion = "motivated"
     elif label == "NEGATIVE":

@@ -3,7 +3,6 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from app.routes.auth import get_current_user
 from app.database import get_db
-import psycopg2.extras
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -12,7 +11,7 @@ templates = Jinja2Templates(directory="templates")
 @router.get("/owner/users", response_class=HTMLResponse)
 def owner_users(request: Request, user: dict = Depends(get_current_user)):
     db = get_db()
-    cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor = db.cursor(dictionary=True)
     cursor.execute("SELECT id, name, email, role FROM users")
     users = cursor.fetchall()
     cursor.close()
@@ -29,7 +28,7 @@ def owner_users(request: Request, user: dict = Depends(get_current_user)):
 @router.get("/hr/team")
 def hr_team(request: Request, user: dict = Depends(get_current_user)):
     db = get_db()
-    cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor = db.cursor(dictionary=True)
     cursor.execute("SELECT name, email FROM users WHERE role = 'employee'")
     employees = cursor.fetchall()
     cursor.close()
@@ -42,7 +41,7 @@ def notifications(request: Request, user: dict = Depends(get_current_user)):
         return RedirectResponse("/login")
 
     db = get_db()
-    cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor = db.cursor(dictionary=True)
 
     # Only fetch moods of employees under this HR
     cursor.execute("""
@@ -80,7 +79,7 @@ def owner_hr_groups(request: Request, user: dict = Depends(get_current_user)):
         return RedirectResponse("/login")
 
     db = get_db()
-    cursor = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cursor = db.cursor(dictionary=True)
 
     # Get all HRs
     cursor.execute("SELECT id, name FROM users WHERE role = 'hr'")
