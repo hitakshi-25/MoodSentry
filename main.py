@@ -1,30 +1,31 @@
-# Entry pointfrom fastapi import FastAPI
-from starlette.middleware.sessions import SessionMiddleware
-from dotenv import load_dotenv
+# main.py
+
 from fastapi import FastAPI
+from starlette.middleware.sessions import SessionMiddleware
 from fastapi.staticfiles import StaticFiles
-from app.routes import audit, auth, mood, dashboard, role_routes, tasks
+from dotenv import load_dotenv
+from app.routes import auth, dashboard, role_routes, audit, tasks
 import os
-import uvicorn
 
 load_dotenv()
+
 app = FastAPI()
 
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))  # Use PORT from env or default to 8000
-    uvicorn.run("main:app", host="0.0.0.0", port=port)
-    
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 # Middleware for sessions
 app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY"))
 
-# Routers
+# Mount static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Routers (NOTE: mood removed due to heavy ML)
 app.include_router(auth.router)
-app.include_router(mood.router)
 app.include_router(dashboard.router)
 app.include_router(role_routes.router)
 app.include_router(audit.router)
 app.include_router(tasks.router)
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Startup for Render
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
