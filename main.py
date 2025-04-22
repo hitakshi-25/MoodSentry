@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
-from app.routes import auth, dashboard, role_routes, audit, tasks
+from app.routes import auth, dashboard, role_routes, audit, tasks, mood
 import os
 
 load_dotenv()
@@ -23,6 +23,7 @@ app.include_router(dashboard.router)
 app.include_router(role_routes.router)
 app.include_router(audit.router)
 app.include_router(tasks.router)
+app.include_router(mood.router)
 
 # Startup for Render
 if __name__ == "__main__":
