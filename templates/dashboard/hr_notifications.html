@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>📢 Stress Alerts from Your Team</h2>
+
+{% if notifications %}
+  <ul>
+    {% for note in notifications %}
+      <li><strong>{{ note.employee }}</strong>: {{ note.message }} — <em>{{ note.created_at }}</em></li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>✅ No stress alerts from your employees.</p>
+{% endif %}
+{% endblock %}

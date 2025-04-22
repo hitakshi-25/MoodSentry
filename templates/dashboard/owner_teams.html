@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>📋 HR-Wise Employee Tables</h2>
+
+{% for group in hr_groups %}
+  <h3>👤 HR: {{ group.hr }}</h3>
+  <table border="1">
+    <tr><th>Name</th><th>Email</th></tr>
+    {% for emp in group.employees %}
+      <tr>
+        <td>{{ emp.name }}</td>
+        <td>{{ emp.email }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  <br>
+{% endfor %}
+
+{% endblock %}
