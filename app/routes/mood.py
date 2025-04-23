@@ -20,7 +20,7 @@ logging.basicConfig(level=logging.INFO)
 
 @router.get("/mood", response_class=HTMLResponse)
 async def get_mood_form(request: Request):
-    user = get_current_user(request)
+    user = get_current_user(request) 
     return templates.TemplateResponse("mood/text.html", {
         "request": request,
         "user": user
