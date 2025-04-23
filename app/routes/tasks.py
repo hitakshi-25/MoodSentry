@@ -27,7 +27,7 @@ def employee_tasks(request: Request, user: dict = Depends(get_current_user)):
     db.close()
 
     return templates.TemplateResponse("dashboard/tasks.html", {
-        "request": request,
+        "request": request, 
         "user": user,
         "tasks": tasks,
         "session": request.session
