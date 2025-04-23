@@ -3,6 +3,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from app.routes.auth import get_current_user
 from app.database import get_db
+import psycopg2.extras
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -13,7 +14,7 @@ def employee_tasks(request: Request, user: dict = Depends(get_current_user)):
         return RedirectResponse("/login")
 
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     cursor.execute("""
         SELECT task_title, task_description, priority, status, created_at

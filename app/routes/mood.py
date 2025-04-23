@@ -29,8 +29,11 @@ async def get_mood_form(request: Request):
 @router.post("/mood")
 async def submit_mood(request: Request, mood_text: str = Form(...)):
     user = request.session.get("user")
-    if not user:
-        return RedirectResponse("/login")
+    if not user or not user.get("id"):
+        logger.error("❌ No user found in session or missing 'id'. Redirecting to login.")
+        return RedirectResponse("/login", status_code=302)
+
+    user_id = user["id"]
 
     analysis = analyze_text_mood(mood_text)
     emotion = analysis["emotion"]
@@ -46,7 +49,10 @@ async def submit_mood(request: Request, mood_text: str = Form(...)):
     db.close()
 
     try:
-        task_info = assign_task_based_on_mood(user["id"], emotion)
+        if not user or "id" not in user:
+            raise ValueError("❌ Invalid session user before assigning task")
+
+        task_info = assign_task_based_on_mood(user_id, emotion)
         body = f"Task: {task_info['task_title']}\nPriority: {task_info['priority']}\nBased on your mood: {emotion}"
     except Exception as e:
         logger.error("Text task assignment failed", exc_info=True)
@@ -76,8 +82,11 @@ async def get_facial_form(request: Request):
 @router.post("/mood/facial")
 async def post_facial_mood(request: Request, file: UploadFile = File(...)):
     user = request.session.get("user")
-    if not user:
-        return RedirectResponse("/login")
+    if not user or not user.get("id"):
+        logger.error("❌ No user found in session or missing 'id'. Redirecting to login.")
+        return RedirectResponse("/login", status_code=302)
+
+    user_id = user["id"]
 
     # ✅ Declare early so it always exists
     image_path = None
@@ -102,7 +111,10 @@ async def post_facial_mood(request: Request, file: UploadFile = File(...)):
         db.close()
 
         try:
-            task_info = assign_task_based_on_mood(user["id"], emotion)
+            if not user or "id" not in user:
+                raise ValueError("❌ Invalid session user before assigning task")
+
+            task_info = assign_task_based_on_mood(user_id, emotion)
             body = f"Task: {task_info['task_title']}\nPriority: {task_info['priority']}\nBased on your mood: {emotion}"
         except Exception as e:
             logger.error("Facial task assignment failed", exc_info=True)
@@ -142,8 +154,11 @@ async def get_voice_form(request: Request):
 @router.post("/mood/voice")
 async def post_voice_mood(request: Request, file: UploadFile = File(...)):
     user = request.session.get("user")
-    if not user:
-        return RedirectResponse("/login")
+    if not user or not user.get("id"):
+        logger.error("❌ No user found in session or missing 'id'. Redirecting to login.")
+        return RedirectResponse("/login", status_code=302)
+
+    user_id = user["id"]
 
     try:
         analysis = detect_mood_from_audio(file)
@@ -160,7 +175,10 @@ async def post_voice_mood(request: Request, file: UploadFile = File(...)):
         db.close()
 
         try:
-            task_info = assign_task_based_on_mood(user["id"], emotion)
+            if not user or "id" not in user:
+                raise ValueError("❌ Invalid session user before assigning task")
+
+            task_info = assign_task_based_on_mood(user_id, emotion)
             body = f"Task: {task_info['task_title']}\nPriority: {task_info['priority']}\nBased on your mood: {emotion}"
         except Exception as e:
             logger.error("Voice task assignment failed", exc_info=True)
