@@ -24,4 +24,4 @@ def save_notification(user_id, message):
     db.commit()
     cursor.close()
     db.close()
- 
+  
