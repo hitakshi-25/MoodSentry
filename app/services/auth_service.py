@@ -1,6 +1,6 @@
 import bcrypt
 from app.database import get_db
-from mysql.connector.errors import IntegrityError
+from psycopg2 import IntegrityError
 
 def create_user(name: str, email: str, password: str, role: str, hr_id: int = None):
     db = get_db()
@@ -25,11 +25,10 @@ def create_user(name: str, email: str, password: str, role: str, hr_id: int = No
         cursor.close()
         db.close()
 
-
 def validate_user(email: str, password: str):
     db = get_db()
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+    cursor = db.cursor()
+    cursor.execute("SELECT id, name, password, role FROM users WHERE email = %s", (email,))
     user = cursor.fetchone()
     cursor.close()
     db.close()
