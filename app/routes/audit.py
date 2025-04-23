@@ -12,7 +12,7 @@ templates = Jinja2Templates(directory="templates")
 def audit_logs(request: Request, user: dict = Depends(get_current_user)):
     if not user or user["role"] != "owner":
         return RedirectResponse("/login")
-
+ 
     db = get_db() 
     cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
