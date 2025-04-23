@@ -36,7 +36,7 @@ async def hr_dashboard(request: Request):
         ORDER BY t.created_at DESC LIMIT 20
     """, (user["id"],))
     tasks = cursor.fetchall()
-
+ 
     # 🧠 Stressed users under this HR only
     cursor.execute("""
         SELECT user_id, COUNT(*) as stress_count, u.name
