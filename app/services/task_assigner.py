@@ -23,7 +23,7 @@ def assign_task_based_on_mood(user_id, emotion):
 
     task_data = MOOD_TASK_MAP.get(emotion.lower(), (
         "Complete a standard task", "Maintain your workflow with regular task.", "Medium"
-    ))
+    )) 
 
     task_title = task_data[0]
     task_description = task_data[1]
