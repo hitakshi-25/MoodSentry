@@ -95,7 +95,7 @@ def owner_hr_groups(request: Request, user: dict = Depends(get_current_user)):
             "hr": hr["name"],
             "employees": employees
         })
-
+ 
     cursor.close()
     db.close()
 
