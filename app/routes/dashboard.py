@@ -12,7 +12,7 @@ templates = Jinja2Templates(directory="templates")
 @router.get("/hr", response_class=HTMLResponse)
 async def hr_dashboard(request: Request):
     user = request.session.get("user")
-    if not user or user["role"] != "hr":
+    if not user or user["role"] != "hr": 
         return RedirectResponse("/login")
 
     db = get_db()
