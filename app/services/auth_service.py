@@ -22,7 +22,7 @@ def create_user(name: str, email: str, password: str, role: str, hr_id: int = No
         db.rollback()
         raise ValueError("Email already registered.")
     finally:
-        cursor.close()
+        cursor.close() 
         db.close()
 
 def validate_user(email: str, password: str):
