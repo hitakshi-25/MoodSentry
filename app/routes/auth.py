@@ -16,7 +16,7 @@ async def index(request: Request):
     session = request.session
     return templates.TemplateResponse("index.html", {
         "request": request,
-        "user": get_current_user(request),
+        "user": get_current_user(request),  
         "session": request.session
     })
 
