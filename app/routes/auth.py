@@ -88,7 +88,7 @@ async def dashboard(request: Request):
     user = get_current_user(request)
     if not user:
         return RedirectResponse(url="/login", status_code=HTTP_303_SEE_OTHER)
-
+ 
     role = user["role"]
     dashboard_template = f"dashboard/{role}.html"  # e.g. dashboard/hr.html
 
