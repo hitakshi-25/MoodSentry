@@ -19,4 +19,4 @@ def notify_hr_of_stress(user_id: int, hr_id: int, message: str):
     finally:
         cursor.close()
         db.close()
- 
+  
