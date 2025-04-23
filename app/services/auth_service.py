@@ -41,3 +41,4 @@ def validate_user(email, password):
         return {"id": user["id"], "name": user["name"], "role": user["role"]}
 
     return None
+ 
