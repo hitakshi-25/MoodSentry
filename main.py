@@ -22,3 +22,4 @@ app.include_router(audit.router)
 app.include_router(tasks.router)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+ 
