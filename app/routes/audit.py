@@ -12,7 +12,7 @@ def audit_logs(request: Request, user: dict = Depends(get_current_user)):
     if not user or user["role"] != "owner":
         return RedirectResponse("/login")
 
-    db = get_db()
+    db = get_db() 
     cursor = db.cursor(dictionary=True)
 
     cursor.execute("""
