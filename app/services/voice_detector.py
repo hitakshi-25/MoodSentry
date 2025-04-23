@@ -24,4 +24,4 @@ def detect_mood_from_audio(file):
         "confidence": mood_result["confidence"],
         "original_label": mood_result["original_label"]
     }
- 
+  
