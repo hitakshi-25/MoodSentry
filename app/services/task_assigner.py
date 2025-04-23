@@ -29,7 +29,7 @@ def assign_task_based_on_mood(user_id: int, emotion: str) -> dict:
 
     db = get_db()
     cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
+ 
     task_title, task_description, priority = MOOD_TASK_MAP.get(
         emotion.lower(), 
         ("Complete a standard task", "Maintain your workflow with regular task.", "Medium")
