@@ -22,7 +22,7 @@ def owner_users(request: Request, user: dict = Depends(get_current_user)):
         "user": user,
         "users": users,
         "session": request.session
-    })
+    }) 
 
 # --- HR View Team ---
 @router.get("/hr/team")
