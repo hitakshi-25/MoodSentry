@@ -26,5 +26,5 @@ def analyze_text_mood(text: str):
     return {
         "emotion": emotion,
         "confidence": round(score, 2),
-        "original_label": label
+        "original_label": label 
     }
