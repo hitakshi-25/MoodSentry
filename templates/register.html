@@ -12,6 +12,7 @@
   <label>
     <span>Designation:</span>
     <select name="role" id="roleSelect" required onchange="toggleHRSelect()">
+      <option>--select--</option>
       <option value="employee">Employee</option>
       <option value="hr">HR</option>
       <option value="owner">Owner</option>
@@ -22,6 +23,7 @@
     <label>
       <span>Select HR:</span>
       <select name="hr_id">
+        <option>--select--</option>
         {% for hr in hr_list %}
           <option value="{{ hr.id }}">{{ hr.name }}</option>
         {% endfor %}
